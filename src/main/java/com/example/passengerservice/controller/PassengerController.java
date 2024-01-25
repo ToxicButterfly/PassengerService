@@ -1,5 +1,6 @@
 package com.example.passengerservice.controller;
 
+import com.example.passengerservice.dto.BankDataDto;
 import com.example.passengerservice.dto.LoginDTO;
 import com.example.passengerservice.dto.PassengerDTO;
 import com.example.passengerservice.dto.PassengerRequestForRide;
@@ -49,5 +50,10 @@ public class PassengerController {
     @PostMapping("callTaxi")
     public ResponseEntity<String> callTaxi(@RequestBody PassengerRequestForRide request) {
         return passengerService.callTaxi(request);
+    }
+
+    @GetMapping("{id}/bank")
+    public ResponseEntity<BankDataDto> getBankData(@PathVariable int id) {
+        return passengerService.getBankData();
     }
 }

@@ -2,6 +2,7 @@ package com.example.passengerservice.service;
 
 import com.example.passengerservice.convert.PassengerDTOConverter;
 import com.example.passengerservice.dao.PassengerDAO;
+import com.example.passengerservice.dto.BankDataDto;
 import com.example.passengerservice.dto.LoginDTO;
 import com.example.passengerservice.dto.PassengerDTO;
 import com.example.passengerservice.dto.PassengerRequestForRide;
@@ -84,4 +85,13 @@ public class PassengerService {
     }
 
 
+    public ResponseEntity<BankDataDto> getBankData() {
+        BankDataDto data = BankDataDto.builder()
+                .cvv("123")
+                .cardNumber("1234567890123456")
+                .expirationDate("12/26")
+                .balance(90000F)
+                .build();
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 }
