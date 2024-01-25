@@ -4,12 +4,11 @@ import com.example.passengerservice.convert.PassengerDTOConverter;
 import com.example.passengerservice.dao.PassengerDAO;
 import com.example.passengerservice.dto.LoginDTO;
 import com.example.passengerservice.dto.PassengerDTO;
+import com.example.passengerservice.dto.PassengerRequestForRide;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.feign.PassengerInterface;
-import com.example.passengerservice.model.Location;
 import com.example.passengerservice.model.Passenger;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,8 +77,8 @@ public class PassengerService {
         else throw new UserNotFoundException("There's no such passenger");
     }
 
-    public ResponseEntity<String> callTaxi(Location location, int id) {
-        passengerInterface.createTrip(location, id);
+    public ResponseEntity<String> callTaxi(PassengerRequestForRide request) {
+        passengerInterface.createTrip(request);
         //Произвести оплату
         return new ResponseEntity<>("Ожидайте водителя", HttpStatus.OK);
     }

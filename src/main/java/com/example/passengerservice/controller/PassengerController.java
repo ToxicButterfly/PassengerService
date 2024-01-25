@@ -2,9 +2,9 @@ package com.example.passengerservice.controller;
 
 import com.example.passengerservice.dto.LoginDTO;
 import com.example.passengerservice.dto.PassengerDTO;
+import com.example.passengerservice.dto.PassengerRequestForRide;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
-import com.example.passengerservice.model.Location;
 import com.example.passengerservice.model.Passenger;
 import com.example.passengerservice.service.PassengerService;
 import jakarta.validation.Valid;
@@ -46,8 +46,8 @@ public class PassengerController {
         return passengerService.deletePassenger(id);
     }
 
-    @PostMapping("callTaxi/{id}")
-    public ResponseEntity<String> callTaxi(@RequestBody Location location,@PathVariable int id) {
-        return passengerService.callTaxi(location, id);
+    @PostMapping("callTaxi")
+    public ResponseEntity<String> callTaxi(@RequestBody PassengerRequestForRide request) {
+        return passengerService.callTaxi(request);
     }
 }
