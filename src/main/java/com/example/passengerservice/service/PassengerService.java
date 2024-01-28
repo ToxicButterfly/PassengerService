@@ -2,10 +2,7 @@ package com.example.passengerservice.service;
 
 import com.example.passengerservice.convert.PassengerDTOConverter;
 import com.example.passengerservice.dao.PassengerDAO;
-import com.example.passengerservice.dto.BankDataDto;
-import com.example.passengerservice.dto.LoginDTO;
-import com.example.passengerservice.dto.PassengerDTO;
-import com.example.passengerservice.dto.PassengerRequestForRide;
+import com.example.passengerservice.dto.*;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.feign.PassengerInterface;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class PassengerService {
@@ -93,5 +91,16 @@ public class PassengerService {
                 .balance(90000F)
                 .build();
         return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+    public ResponseEntity<RatingResponse> askOpinion(int id) {
+        Random random = new Random();
+        int r = 1 + random.nextInt(5);
+        return new ResponseEntity<>(new RatingResponse(r), HttpStatus.OK);
+    }
+
+    public void updateRating(UpdateRatingRequest request) {
+        Passenger passenger = passengerDAO.findById(request.getUId()).get();
+        passenger.setRating(request.getRating());
     }
 }

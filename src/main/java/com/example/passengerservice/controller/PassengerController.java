@@ -1,9 +1,6 @@
 package com.example.passengerservice.controller;
 
-import com.example.passengerservice.dto.BankDataDto;
-import com.example.passengerservice.dto.LoginDTO;
-import com.example.passengerservice.dto.PassengerDTO;
-import com.example.passengerservice.dto.PassengerRequestForRide;
+import com.example.passengerservice.dto.*;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
@@ -55,5 +52,15 @@ public class PassengerController {
     @GetMapping("{id}/bank")
     public ResponseEntity<BankDataDto> getBankData(@PathVariable int id) {
         return passengerService.getBankData();
+    }
+
+    @GetMapping("{id}/rating")
+    public ResponseEntity<RatingResponse> askOpinion(@PathVariable int id) {
+        return passengerService.askOpinion(id);
+    }
+
+    @PutMapping("{id}/rating")
+    public void updateRating(@RequestBody UpdateRatingRequest request) {
+        passengerService.updateRating(request);
     }
 }
