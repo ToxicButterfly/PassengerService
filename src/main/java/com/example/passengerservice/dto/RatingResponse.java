@@ -2,9 +2,11 @@ package com.example.passengerservice.dto;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class RatingResponse {
 
     private Integer Rating;

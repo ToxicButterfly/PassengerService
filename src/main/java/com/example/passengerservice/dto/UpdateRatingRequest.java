@@ -1,13 +1,12 @@
 package com.example.passengerservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class UpdateRatingRequest {
-    private Integer uId;
     private Float rating;
 }

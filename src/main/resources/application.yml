@@ -10,7 +10,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/passengerdb
   jpa:
     database: postgresql
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: validate
     properties:

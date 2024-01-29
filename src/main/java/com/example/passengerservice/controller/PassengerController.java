@@ -60,7 +60,7 @@ public class PassengerController {
     }
 
     @PutMapping("{id}/rating")
-    public void updateRating(@RequestBody UpdateRatingRequest request) {
-        passengerService.updateRating(request);
+    public void updateRating(@RequestBody UpdateRatingRequest request, @PathVariable int id) {
+        passengerService.updateRating(request, id);
     }
 }
