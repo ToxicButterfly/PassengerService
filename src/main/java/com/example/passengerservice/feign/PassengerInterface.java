@@ -5,9 +5,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient("RIDES-SERVICE")
+@FeignClient(value = "${feign.client.rides.name}", url = "${feign.client.rides.url}", path = "${feign.client.rides.path}")
 public interface PassengerInterface {
-    @PostMapping("api/v1/ride/createTrip")
+    @PostMapping("createTrip")
     public void createTrip(@RequestBody PassengerRequestForRide request);
 }
 

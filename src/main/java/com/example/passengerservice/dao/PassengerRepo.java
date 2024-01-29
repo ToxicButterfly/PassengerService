@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface PassengerDAO extends JpaRepository<Passenger, Integer> {
+public interface PassengerRepo extends JpaRepository<Passenger, Integer> {
     Optional<Passenger> findByEmailAndPassword(String email, String password);
 
     Optional<Passenger> findByEmailOrUsername(String email, String username);

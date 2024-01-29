@@ -20,27 +20,27 @@ public class PassengerController {
     PassengerService passengerService;
 
     @PostMapping("register")
-    public ResponseEntity<PassengerDTO> registration(@RequestBody @Valid Passenger passenger) throws InvalidLoginException {
+    public ResponseEntity<PassengerDto> registration(@RequestBody @Valid Passenger passenger) throws InvalidLoginException {
         return passengerService.register(passenger);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<PassengerDTO>> getAllPassengers() throws UserNotFoundException {
+    public ResponseEntity<List<PassengerDto>> getAllPassengers() throws UserNotFoundException {
         return passengerService.getAllPassengers();
     }
 
     @PostMapping("login")
-    public ResponseEntity<PassengerDTO> getPassenger(@RequestBody LoginDTO loginDTO) throws InvalidLoginException {
+    public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDTO) throws InvalidLoginException {
         return passengerService.getPassenger(loginDTO);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PassengerDTO> updatePassenger(@RequestBody @Valid Passenger passenger, @PathVariable int id) {
+    public ResponseEntity<PassengerDto> updatePassenger(@RequestBody @Valid Passenger passenger, @PathVariable int id) {
         return passengerService.addOrUpdatePassenger(passenger, id);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<PassengerDTO> deletePassenger(@PathVariable int id) throws UserNotFoundException {
+    public ResponseEntity<PassengerDto> deletePassenger(@PathVariable int id) throws UserNotFoundException {
         return passengerService.deletePassenger(id);
     }
 
