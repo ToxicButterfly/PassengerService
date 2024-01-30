@@ -1,4 +1,4 @@
-package com.example.passengerservice.dao;
+package com.example.passengerservice.repo;
 
 import com.example.passengerservice.model.Passenger;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(value = "${feign.client.rides.name}", url = "${feign.client.rides.url}", path = "${feign.client.rides.path}")
-public interface PassengerInterface {
+public interface RideFeignInterface {
     @PostMapping("createTrip")
     public void createTrip(@RequestBody PassengerRequestForRide request);
 }

@@ -1,62 +1,65 @@
 package com.example.passengerservice.controller;
 
 import com.example.passengerservice.dto.*;
+import com.example.passengerservice.dto.response.CallTaxiResponse;
+import com.example.passengerservice.dto.response.RatingResponse;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
-import com.example.passengerservice.service.PassengerService;
+import com.example.passengerservice.service.impl.PassengerForRidesServiceImpl;
+import com.example.passengerservice.service.impl.PassengerServiceImpl;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/passenger")
 public class PassengerController {
 
-    @Autowired
-    PassengerService passengerService;
+    final PassengerServiceImpl passengerService;
+    final PassengerForRidesServiceImpl ridesService;
 
-    @PostMapping("register")
+    @PostMapping
     public ResponseEntity<PassengerDto> registration(@RequestBody @Valid Passenger passenger) throws InvalidLoginException {
-        return passengerService.register(passenger);
+        return ResponseEntity.status(HttpStatus.CREATED).body(passengerService.register(passenger));
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<PassengerDto>> getAllPassengers() throws UserNotFoundException {
-        return passengerService.getAllPassengers();
+    @GetMapping
+    public ResponseEntity<PassengersDto> getAllPassengers() throws UserNotFoundException {
+        return ResponseEntity.ok(passengerService.getAllPassengers());
     }
 
     @PostMapping("login")
     public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDTO) throws InvalidLoginException {
-        return passengerService.getPassenger(loginDTO);
+        return ResponseEntity.ok(passengerService.getPassenger(loginDTO));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<PassengerDto> updatePassenger(@RequestBody @Valid Passenger passenger, @PathVariable int id) {
-        return passengerService.addOrUpdatePassenger(passenger, id);
+        return ResponseEntity.ok(passengerService.addOrUpdatePassenger(passenger, id));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<PassengerDto> deletePassenger(@PathVariable int id) throws UserNotFoundException {
-        return passengerService.deletePassenger(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(passengerService.deletePassenger(id));
     }
 
     @PostMapping("callTaxi")
-    public ResponseEntity<String> callTaxi(@RequestBody PassengerRequestForRide request) {
-        return passengerService.callTaxi(request);
+    public ResponseEntity<CallTaxiResponse> callTaxi(@RequestBody PassengerRequestForRide request) {
+        return ResponseEntity.ok(ridesService.callTaxi(request));
     }
 
     @GetMapping("{id}/bank")
     public ResponseEntity<BankDataDto> getBankData(@PathVariable int id) {
-        return passengerService.getBankData();
+        return ResponseEntity.ok(passengerService.getBankData());
     }
 
     @GetMapping("{id}/rating")
     public ResponseEntity<RatingResponse> askOpinion(@PathVariable int id) {
-        return passengerService.askOpinion(id);
+        return ResponseEntity.ok(passengerService.askOpinion(id));
     }
 
     @PutMapping("{id}/rating")
