@@ -5,8 +5,6 @@ import com.example.passengerservice.dto.PassengerDto;
 import com.example.passengerservice.dto.PassengerRequestForRide;
 import com.example.passengerservice.model.Passenger;
 import lombok.experimental.UtilityClass;
-import lombok.extern.java.Log;
-import scala.Int;
 
 @UtilityClass
 public class TestUtils {
