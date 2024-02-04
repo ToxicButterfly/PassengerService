@@ -9,12 +9,15 @@ import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
 import com.example.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import static com.example.passengerservice.util.Messages.*;
 
 @Service
 @Slf4j
@@ -24,10 +27,11 @@ public class PassengerServiceImpl implements PassengerService {
     final PassengerRepo passengerRepo;
     final PassengerDtoConverter passengerDtoConverter;
 
-    public PassengerDto register(Passenger passenger) throws InvalidLoginException {
+    @SneakyThrows
+    public PassengerDto register(Passenger passenger) {
         Optional<Passenger> someone = passengerRepo.findByEmailOrUsername(passenger.getEmail(),passenger.getUsername());
         if (someone.isPresent()) {
-            throw new InvalidLoginException("Username or Email is already taken");
+            throw new InvalidLoginException(INVALID_REGISTRATION_MESSAGE);
         }
         passenger.setRating(5.0F);
         passengerRepo.save(passenger);
@@ -35,6 +39,7 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
     }
 
+    @SneakyThrows
     public PassengersDto getAllPassengers() {
         List<PassengerDto> passengers = passengerRepo.findAll()
                 .stream()
@@ -43,9 +48,10 @@ public class PassengerServiceImpl implements PassengerService {
         return new PassengersDto(passengers);
     }
 
-    public PassengerDto getPassenger(LoginDto loginDTO) throws InvalidLoginException {
-        Passenger passenger = passengerRepo.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword())
-                .orElseThrow(() -> new InvalidLoginException("Invalid email or password"));
+    @SneakyThrows
+    public PassengerDto getPassenger(LoginDto loginDto) {
+        Passenger passenger = passengerRepo.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword())
+                .orElseThrow(() -> new InvalidLoginException(INVALID_LOGIN_MESSAGE));
         return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
 
     }
@@ -59,9 +65,10 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
     }
 
-    public PassengerDto deletePassenger(int id) throws UserNotFoundException {
+    @SneakyThrows
+    public PassengerDto deletePassenger(int id) {
         Passenger passenger = passengerRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("There's no such passenger"));
+                .orElseThrow(() -> new UserNotFoundException(PASSENGER_NOT_FOUND_MESSAGE));
         passengerRepo.deleteById(id);
         return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
 
@@ -69,10 +76,10 @@ public class PassengerServiceImpl implements PassengerService {
 
     public BankDataDto getBankData() {
         BankDataDto data = BankDataDto.builder()
-                .cvv("123")
-                .cardNumber("1234567890123456")
-                .expirationDate("12/26")
-                .balance(90000F)
+                .cvv(CVV)
+                .cardNumber(CARD_NUMBER)
+                .expirationDate(EXPIRATION_DATE)
+                .balance(BALANCE)
                 .build();
         log.info("Sending bank data");
         return data;

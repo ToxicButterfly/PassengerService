@@ -6,6 +6,8 @@ import com.example.passengerservice.dto.response.RatingResponse;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
+import com.example.passengerservice.service.PassengerForRidesService;
+import com.example.passengerservice.service.PassengerService;
 import com.example.passengerservice.service.impl.PassengerForRidesServiceImpl;
 import com.example.passengerservice.service.impl.PassengerServiceImpl;
 import jakarta.validation.Valid;
@@ -16,24 +18,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/passenger")
+@RequestMapping("api/v1/passengers")
 public class PassengerController {
 
-    final PassengerServiceImpl passengerService;
-    final PassengerForRidesServiceImpl ridesService;
+    final PassengerService passengerService;
+    final PassengerForRidesService ridesService;
 
     @PostMapping
-    public ResponseEntity<PassengerDto> registration(@RequestBody @Valid Passenger passenger) throws InvalidLoginException {
+    public ResponseEntity<PassengerDto> registration(@RequestBody @Valid Passenger passenger) {
         return ResponseEntity.status(HttpStatus.CREATED).body(passengerService.register(passenger));
     }
 
     @GetMapping
-    public ResponseEntity<PassengersDto> getAllPassengers() throws UserNotFoundException {
+    public ResponseEntity<PassengersDto> getAllPassengers() {
         return ResponseEntity.ok(passengerService.getAllPassengers());
     }
 
     @PostMapping("login")
-    public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDTO) throws InvalidLoginException {
+    public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDTO) {
         return ResponseEntity.ok(passengerService.getPassenger(loginDTO));
     }
 
@@ -43,7 +45,7 @@ public class PassengerController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<PassengerDto> deletePassenger(@PathVariable int id) throws UserNotFoundException {
+    public ResponseEntity<PassengerDto> deletePassenger(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(passengerService.deletePassenger(id));
     }
 

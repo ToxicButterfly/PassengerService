@@ -17,16 +17,16 @@ public class PassengerDtoConverter {
         return modelMapper.map(passenger, PassengerDto.class);
     }
 
-    public Passenger convertPassengerDtoToPassenger(PassengerDto passengerDTO) {
-        return modelMapper.map(passengerDTO, Passenger.class);
+    public Passenger convertPassengerDtoToPassenger(PassengerDto passengerDto) {
+        return modelMapper.map(passengerDto, Passenger.class);
     }
 
     public LoginDto convertPassengerToLoginDto(Passenger passenger) {
         return modelMapper.map(passenger, LoginDto.class);
     }
 
-    public Passenger convertLoginDtoToPassenger(LoginDto loginDTO) {
-        return modelMapper.map(loginDTO, Passenger.class);
+    public Passenger convertLoginDtoToPassenger(LoginDto loginDto) {
+        return modelMapper.map(loginDto, Passenger.class);
     }
 
 }

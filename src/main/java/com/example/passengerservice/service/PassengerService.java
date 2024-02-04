@@ -7,11 +7,11 @@ import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
 
 public interface PassengerService {
-    PassengerDto register(Passenger passenger) throws InvalidLoginException;
+    PassengerDto register(Passenger passenger);
     PassengersDto getAllPassengers();
-    PassengerDto getPassenger(LoginDto loginDTO) throws InvalidLoginException;
+    PassengerDto getPassenger(LoginDto loginDTO);
     PassengerDto addOrUpdatePassenger(Passenger passenger, int id);
-    PassengerDto deletePassenger(int id) throws UserNotFoundException;
+    PassengerDto deletePassenger(int id);
     BankDataDto getBankData();
     RatingResponse askOpinion(int id);
     void updateRating(UpdateRatingRequest request, Integer id);
