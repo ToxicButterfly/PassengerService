@@ -41,11 +41,10 @@ public class PassengerServiceImpl implements PassengerService {
 
     @SneakyThrows
     public PassengersDto getAllPassengers() {
-        List<PassengerDto> passengers = passengerRepo.findAll()
+        return new PassengersDto(passengerRepo.findAll()
                 .stream()
                 .map(passengerDtoConverter::convertPassengerToPassengerDto)
-                .toList();
-        return new PassengersDto(passengers);
+                .toList());
     }
 
     @SneakyThrows
