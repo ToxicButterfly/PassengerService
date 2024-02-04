@@ -34,9 +34,9 @@ public class PassengerServiceImpl implements PassengerService {
             throw new InvalidLoginException(INVALID_REGISTRATION_MESSAGE);
         }
         passenger.setRating(5.0F);
-        passengerRepo.save(passenger);
+        Passenger response = passengerRepo.save(passenger);
         log.info("Passenger {} just registered", passenger.getUsername());
-        return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
+        return passengerDtoConverter.convertPassengerToPassengerDto(response);
     }
 
     @SneakyThrows
@@ -60,8 +60,7 @@ public class PassengerServiceImpl implements PassengerService {
         if (passengerRepo.findById(id).isPresent()) {
             passenger.setId(id);
         }
-        passengerRepo.save(passenger);
-        return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
+        return passengerDtoConverter.convertPassengerToPassengerDto(passengerRepo.save(passenger));
     }
 
     @SneakyThrows
