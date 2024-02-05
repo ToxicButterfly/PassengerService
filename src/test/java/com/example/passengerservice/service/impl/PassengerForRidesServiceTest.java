@@ -18,9 +18,9 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class PassengerForRidesServiceTest {
     @Mock
-    public RideFeignInterface rideFeignInterface;
+    private RideFeignInterface rideFeignInterface;
     @InjectMocks
-    public PassengerForRidesServiceImpl passengerForRidesService;
+    private PassengerForRidesServiceImpl passengerForRidesService;
 
     @Test
     void callTaxi() {

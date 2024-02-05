@@ -35,8 +35,8 @@ public class PassengerController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDTO) {
-        return ResponseEntity.ok(passengerService.getPassenger(loginDTO));
+    public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(passengerService.getPassenger(loginDto));
     }
 
     @PutMapping("{id}")
