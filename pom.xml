@@ -18,6 +18,8 @@
         <modelmapper.version>3.2.0</modelmapper.version>
         <postgresql.version>42.6.0</postgresql.version>
         <spring-cloud.version>4.1.0</spring-cloud.version>
+        <cucumber.version>7.14.0</cucumber.version>
+        <test-conteiners-postgres.version>1.17.3</test-conteiners-postgres.version>
     </properties>
     <dependencies>
 
@@ -90,6 +92,33 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${test-conteiners-postgres.version}</version>
             <scope>test</scope>
         </dependency>
 
