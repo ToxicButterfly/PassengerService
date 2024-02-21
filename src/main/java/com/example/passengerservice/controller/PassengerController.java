@@ -3,13 +3,10 @@ package com.example.passengerservice.controller;
 import com.example.passengerservice.dto.*;
 import com.example.passengerservice.dto.response.CallTaxiResponse;
 import com.example.passengerservice.dto.response.RatingResponse;
-import com.example.passengerservice.exception.InvalidLoginException;
-import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
 import com.example.passengerservice.service.PassengerForRidesService;
 import com.example.passengerservice.service.PassengerService;
-import com.example.passengerservice.service.impl.PassengerForRidesServiceImpl;
-import com.example.passengerservice.service.impl.PassengerServiceImpl;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,6 +47,7 @@ public class PassengerController {
     }
 
     @PostMapping("callTaxi")
+    @CircuitBreaker(name="callTaxi", fallbackMethod = "fallbackCallTaxi")
     public ResponseEntity<CallTaxiResponse> callTaxi(@RequestBody PassengerRequestForRide request) {
         return ResponseEntity.ok(ridesService.callTaxi(request));
     }
@@ -67,5 +65,9 @@ public class PassengerController {
     @PutMapping("{id}/rating")
     public void updateRating(@RequestBody UpdateRatingRequest request, @PathVariable int id) {
         passengerService.updateRating(request, id);
+    }
+
+    public ResponseEntity<CallTaxiResponse> fallbackCallTaxi(Throwable throwable){
+        return ResponseEntity.internalServerError().body(new CallTaxiResponse("Сервер упал, подождите"));
     }
 }

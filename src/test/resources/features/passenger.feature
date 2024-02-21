@@ -15,10 +15,13 @@ Feature: Passenger Service
     When Get request with email "CorrectEmail@gmail.com" and password "123456" passed to the login method
     Then The response should return passenger data
 
-  Scenario: Getting passenger data with incorrect login credentials
-    Given A passenger with email "CorrectEmail@gmail.com" and password "123456" does not exist
-    When Get request with email "CorrectEmail@gmail.com" and password "123456" passed to the login method
+  Scenario Outline: Getting passenger data with incorrect login credentials
+    Given A passenger with email <email> and password <password> does not exist
+    When Get request with email <email> and password <password> passed to the login method
     Then The InvalidLoginException should be thrown
+    Examples:
+      | email                    | password |
+      | "CorrectEmail@gmail.com" | "123456" |
 
   Scenario: Adding new passenger
     Given A passenger with id 5 does not exist
