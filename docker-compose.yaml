@@ -235,6 +235,26 @@ services:
     ports:
       - '9411:9411'
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.0
+    container_name: keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_PASSWORD: 12345
+      KC_DB_USERNAME: postgres
+      KC_DB_SCHEMA: public
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    networks:
+      - kafka-net
+    command: start-dev
+    depends_on:
+      - db
+
 volumes:
   elasticsearch_data:
     driver: local
