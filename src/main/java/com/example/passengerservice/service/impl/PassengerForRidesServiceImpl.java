@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PassengerForRidesServiceImpl implements PassengerForRidesService {
 
-    final RideFeignInterface rideFeignInterface;
+    private final RideFeignInterface rideFeignInterface;
 
     public CallTaxiResponse callTaxi(PassengerRequestForRide request) {
         rideFeignInterface.createTrip(request);

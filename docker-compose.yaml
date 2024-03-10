@@ -85,6 +85,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/passengerdb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
     depends_on:
       - db
       - eureka-server
@@ -100,6 +101,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/driverdb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
     depends_on:
       - db
       - eureka-server
@@ -111,6 +113,8 @@ services:
       - 8081:8081
     networks:
       - kafka-net
+    environment:
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
     links:
       - mongodb
     depends_on:
@@ -156,6 +160,7 @@ services:
       - kafka-net
     environment:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://keycloak:8080/realms/cab-aggregator-realm
     depends_on:
       - eureka-server
 
@@ -234,6 +239,28 @@ services:
       - kafka-net
     ports:
       - '9411:9411'
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_PASSWORD: 12345
+      KC_DB_USERNAME: postgres
+      KC_DB_SCHEMA: public
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    ports:
+      - "8080:8080"
+    networks:
+      - kafka-net
+    command: -v start-dev --import-realm
+    depends_on:
+      - db
 
 volumes:
   elasticsearch_data:

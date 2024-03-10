@@ -2,6 +2,11 @@ server:
   port: 8082
 spring:
   application.name: passenger-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
   jackson.serialization:
     indent-output: true
   datasource:
@@ -48,3 +53,11 @@ management:
   tracing:
     sampling:
       probability: 1.0
+jwt:
+  auth:
+    converter:
+      resource-id: cab-aggregator-client
+      principal-attribute: preferred_username
+logging:
+  level:
+    org.springframework.security: DEBUG

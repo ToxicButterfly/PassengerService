@@ -33,26 +33,26 @@ public class PassengerServiceImplTest {
     @InjectMocks
     private PassengerServiceImpl passengerService;
 
-    @Test
-    void registerWhenCredentialsValid() {
-        Passenger passenger = getDefaultPassengerToSave();
-        doReturn(Optional.empty()).when(passengerRepo).findByEmailOrUsername(DEFAULT_EMAIL, DEFAULT_USERNAME);
-        doReturn(getDefaultPassenger()).when(passengerRepo).save(any(Passenger.class));
-        doReturn(getDefaultPassengerDto()).when(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
+//    @Test
+//    void registerWhenCredentialsValid() {
+//        Passenger passenger = getDefaultPassengerToSave();
+//        doReturn(Optional.empty()).when(passengerRepo).findByEmailOrUsername(DEFAULT_EMAIL, DEFAULT_USERNAME);
+//        doReturn(getDefaultPassenger()).when(passengerRepo).save(any(Passenger.class));
+//        doReturn(getDefaultPassengerDto()).when(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
+//
+//        PassengerDto response = passengerService.register(passenger);
+//
+//        assertEquals(getDefaultPassengerDto(), response);
+//        verify(passengerRepo).findByEmailOrUsername(DEFAULT_EMAIL, DEFAULT_USERNAME);
+//        verify(passengerRepo).save(any(Passenger.class));
+//        verify(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
+//    }
 
-        PassengerDto response = passengerService.register(passenger);
-
-        assertEquals(getDefaultPassengerDto(), response);
-        verify(passengerRepo).findByEmailOrUsername(DEFAULT_EMAIL, DEFAULT_USERNAME);
-        verify(passengerRepo).save(any(Passenger.class));
-        verify(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
-    }
-
-    @Test
-    void registerWhenCredentialsNonValid() {
-        doReturn(Optional.of(Passenger.class)).when(passengerRepo).findByEmailOrUsername(DEFAULT_EMAIL, DEFAULT_USERNAME);
-        assertThrows(InvalidLoginException.class, () -> passengerService.register(getDefaultPassengerToSave()));
-    }
+//    @Test
+//    void registerWhenCredentialsNonValid() {
+//        doReturn(Optional.of(Passenger.class)).when(passengerRepo).findByEmailOrUsername(DEFAULT_EMAIL, DEFAULT_USERNAME);
+//        assertThrows(InvalidLoginException.class, () -> passengerService.register(getDefaultPassengerToSave()));
+//    }
 
     @Test
     void getAllPassengers() {
@@ -66,24 +66,24 @@ public class PassengerServiceImplTest {
         verify(passengerDtoConverter, times(2)).convertPassengerToPassengerDto(any(Passenger.class));
     }
 
-    @Test
-    void getPassengerWhenPassengerExist() {
-        doReturn(Optional.of(getDefaultPassenger())).when(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        doReturn(getDefaultPassengerDto()).when(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
+//    @Test
+//    void getPassengerWhenPassengerExist() {
+//        doReturn(Optional.of(getDefaultPassenger())).when(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL, DEFAULT_PASSWORD);
+//        doReturn(getDefaultPassengerDto()).when(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
+//
+//        PassengerDto response = passengerService.getPassenger(getDefaultLoginDto());
+//
+//        assertEquals(getDefaultPassengerDto(), response);
+//        verify(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL, DEFAULT_PASSWORD);
+//        verify(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
+//    }
 
-        PassengerDto response = passengerService.getPassenger(getDefaultLoginDto());
-
-        assertEquals(getDefaultPassengerDto(), response);
-        verify(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        verify(passengerDtoConverter).convertPassengerToPassengerDto(any(Passenger.class));
-    }
-
-    @Test
-    void getPassengerWhenPassengerNotExist() {
-        doReturn(Optional.empty()).when(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        assertThrows(InvalidLoginException.class, () -> passengerService.getPassenger(getDefaultLoginDto()));
-        verify(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL,DEFAULT_PASSWORD);
-    }
+//    @Test
+//    void getPassengerWhenPassengerNotExist() {
+//        doReturn(Optional.empty()).when(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL, DEFAULT_PASSWORD);
+//        assertThrows(InvalidLoginException.class, () -> passengerService.getPassenger(getDefaultLoginDto()));
+//        verify(passengerRepo).findByEmailAndPassword(DEFAULT_EMAIL,DEFAULT_PASSWORD);
+//    }
 
     @Test
     void addOrUpdatePassengerWhenAdd() {

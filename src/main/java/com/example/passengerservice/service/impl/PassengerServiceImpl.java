@@ -1,19 +1,18 @@
 package com.example.passengerservice.service.impl;
 
 import com.example.passengerservice.convert.PassengerDtoConverter;
-import com.example.passengerservice.dto.response.RatingResponse;
-import com.example.passengerservice.repo.PassengerRepo;
 import com.example.passengerservice.dto.*;
+import com.example.passengerservice.dto.response.RatingResponse;
 import com.example.passengerservice.exception.InvalidLoginException;
 import com.example.passengerservice.exception.UserNotFoundException;
 import com.example.passengerservice.model.Passenger;
+import com.example.passengerservice.repo.PassengerRepo;
 import com.example.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,16 +23,22 @@ import static com.example.passengerservice.util.Messages.*;
 @RequiredArgsConstructor
 public class PassengerServiceImpl implements PassengerService {
 
-    final PassengerRepo passengerRepo;
-    final PassengerDtoConverter passengerDtoConverter;
+    private final PassengerRepo passengerRepo;
+    private final PassengerDtoConverter passengerDtoConverter;
 
     @SneakyThrows
-    public PassengerDto register(Passenger passenger) {
-        Optional<Passenger> someone = passengerRepo.findByEmailOrUsername(passenger.getEmail(),passenger.getUsername());
+    public PassengerDto register(PassengerCreateRequest request) {
+        Optional<Passenger> someone = passengerRepo.findByEmailOrUsername(request.getEmail(),request.getUsername());
         if (someone.isPresent()) {
             throw new InvalidLoginException(INVALID_REGISTRATION_MESSAGE);
         }
-        passenger.setRating(5.0F);
+        Passenger passenger = Passenger.builder()
+                .fullName(request.getFullName())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .rating(5.0F)
+                .build();
+
         Passenger response = passengerRepo.save(passenger);
         log.info("Passenger {} just registered", passenger.getUsername());
         return passengerDtoConverter.convertPassengerToPassengerDto(response);
@@ -48,9 +53,9 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @SneakyThrows
-    public PassengerDto getPassenger(LoginDto loginDto) {
-        Passenger passenger = passengerRepo.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword())
-                .orElseThrow(() -> new InvalidLoginException(INVALID_LOGIN_MESSAGE));
+    public PassengerDto getPassenger(int id) {
+        Passenger passenger = passengerRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(PASSENGER_NOT_FOUND_MESSAGE));
         return passengerDtoConverter.convertPassengerToPassengerDto(passenger);
 
     }
@@ -90,8 +95,10 @@ public class PassengerServiceImpl implements PassengerService {
         return new RatingResponse(r);
     }
 
+    @SneakyThrows
     public void updateRating(UpdateRatingRequest request, Integer id) {
-        Passenger passenger = passengerRepo.findById(id).get();
+        Passenger passenger = passengerRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(PASSENGER_NOT_FOUND_MESSAGE));
         passenger.setRating(request.getRating());
         passengerRepo.save(passenger);
         log.info("Rating of user with id {} has been updated to {}", id, request.getRating());
