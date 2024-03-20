@@ -6,8 +6,3 @@ create table passenger (
     password varchar(255),
     username varchar(255),
     primary key (id))
-
-GO
-
-INSERT INTO passenger(full_name, username, email, password, rating)
-VALUES ('Николай Николаев', 'Ник', 'Kolya@gmail.com', '123457', '5.0');

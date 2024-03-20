@@ -1,53 +1,73 @@
 package com.example.passengerservice.controller;
 
-import com.example.passengerservice.dto.LoginDTO;
-import com.example.passengerservice.dto.PassengerDTO;
-import com.example.passengerservice.exception.InvalidLoginException;
-import com.example.passengerservice.exception.UserNotFoundException;
-import com.example.passengerservice.model.Location;
+import com.example.passengerservice.dto.*;
+import com.example.passengerservice.dto.response.CallTaxiResponse;
+import com.example.passengerservice.dto.response.RatingResponse;
 import com.example.passengerservice.model.Passenger;
+import com.example.passengerservice.service.PassengerForRidesService;
 import com.example.passengerservice.service.PassengerService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("api/v1/passenger")
+@RequiredArgsConstructor
+@RequestMapping("api/v1/passengers")
 public class PassengerController {
 
-    @Autowired
-    PassengerService passengerService;
+    final PassengerService passengerService;
+    final PassengerForRidesService ridesService;
 
-    @PostMapping("register")
-    public ResponseEntity<PassengerDTO> registration(@RequestBody @Valid Passenger passenger) throws InvalidLoginException {
-        return passengerService.register(passenger);
+    @PostMapping
+    public ResponseEntity<PassengerDto> registration(@RequestBody @Valid Passenger passenger) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(passengerService.register(passenger));
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<PassengerDTO>> getAllPassengers() throws UserNotFoundException {
-        return passengerService.getAllPassengers();
+    @GetMapping
+    public ResponseEntity<PassengersDto> getAllPassengers() {
+        return ResponseEntity.ok(passengerService.getAllPassengers());
     }
 
     @PostMapping("login")
-    public ResponseEntity<PassengerDTO> getPassenger(@RequestBody LoginDTO loginDTO) throws InvalidLoginException {
-        return passengerService.getPassenger(loginDTO);
+    public ResponseEntity<PassengerDto> getPassenger(@RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(passengerService.getPassenger(loginDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PassengerDTO> updatePassenger(@RequestBody @Valid Passenger passenger, @PathVariable int id) {
-        return passengerService.addOrUpdatePassenger(passenger, id);
+    public ResponseEntity<PassengerDto> updatePassenger(@RequestBody @Valid Passenger passenger, @PathVariable int id) {
+        return ResponseEntity.ok(passengerService.addOrUpdatePassenger(passenger, id));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<PassengerDTO> deletePassenger(@PathVariable int id) throws UserNotFoundException {
-        return passengerService.deletePassenger(id);
+    public ResponseEntity<PassengerDto> deletePassenger(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(passengerService.deletePassenger(id));
     }
 
-    @PostMapping("callTaxi/{id}")
-    public ResponseEntity<String> callTaxi(@RequestBody Location location,@PathVariable int id) {
-        return passengerService.callTaxi(location, id);
+    @PostMapping("callTaxi")
+    @CircuitBreaker(name="callTaxi", fallbackMethod = "fallbackCallTaxi")
+    public ResponseEntity<CallTaxiResponse> callTaxi(@RequestBody PassengerRequestForRide request) {
+        return ResponseEntity.ok(ridesService.callTaxi(request));
+    }
+
+    @GetMapping("{id}/bank")
+    public ResponseEntity<BankDataDto> getBankData(@PathVariable int id) {
+        return ResponseEntity.ok(passengerService.getBankData());
+    }
+
+    @GetMapping("{id}/rating")
+    public ResponseEntity<RatingResponse> askOpinion(@PathVariable int id) {
+        return ResponseEntity.ok(passengerService.askOpinion(id));
+    }
+
+    @PutMapping("{id}/rating")
+    public void updateRating(@RequestBody UpdateRatingRequest request, @PathVariable int id) {
+        passengerService.updateRating(request, id);
+    }
+
+    public ResponseEntity<CallTaxiResponse> fallbackCallTaxi(Throwable throwable){
+        return ResponseEntity.internalServerError().body(new CallTaxiResponse("Сервер упал, подождите"));
     }
 }
