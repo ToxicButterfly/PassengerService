@@ -35,6 +35,18 @@ services:
     depends_on:
       - zookeeper
 
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.7.0
+    container_name: kafka-exporter
+    command: [ "--kafka.server=kafka:29092" ]
+    ports:
+      - '9308:9308'
+    networks:
+      - kafka-net
+    depends_on:
+      - kafka
+      - payment-service
+
   db:
     container_name: postgres
     image: postgres:14.3-alpine
@@ -146,3 +158,103 @@ services:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
     depends_on:
       - eureka-server
+
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: prometheus
+    networks:
+      - kafka-net
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:10.1.5
+    container_name: grafana
+    networks:
+      - kafka-net
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+
+  elasticsearch:
+    image: elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - kafka-net
+
+  kibana:
+    image: kibana:8.12.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks:
+      - kafka-net
+
+  logstash:
+    image: logstash:8.12.0
+    container_name: logstash
+    volumes:
+      - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - kafka-net
+    depends_on:
+      - elasticsearch
+
+  zipkin:
+    image: openzipkin/zipkin:2.27
+    container_name: zipkin
+    networks:
+      - kafka-net
+    ports:
+      - '9411:9411'
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.0
+    container_name: keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_PASSWORD: 12345
+      KC_DB_USERNAME: postgres
+      KC_DB_SCHEMA: public
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    networks:
+      - kafka-net
+    command: start-dev
+    depends_on:
+      - db
+
+volumes:
+  elasticsearch_data:
+    driver: local

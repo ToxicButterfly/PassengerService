@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>PassengerService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>PassengerService</name>
     <description>PassengerService</description>
     <properties>
@@ -20,6 +20,8 @@
         <spring-cloud.version>4.1.0</spring-cloud.version>
         <cucumber.version>7.14.0</cucumber.version>
         <test-conteiners-postgres.version>1.17.3</test-conteiners-postgres.version>
+        <logstash.version>7.2</logstash.version>
+        <resilience4j.version>2.1.0</resilience4j.version>
     </properties>
     <dependencies>
 
@@ -124,18 +126,34 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
         <dependency>
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-spring-boot3</artifactId>
-            <version>2.1.0</version>
+            <version>${resilience4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.zipkin.reporter2</groupId>
+            <artifactId>zipkin-reporter-brave</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.version}</version>
         </dependency>
     </dependencies>
 
